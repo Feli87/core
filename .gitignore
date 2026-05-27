@@ -1,0 +1,39 @@
+# ── Dependencias ──
+node_modules/
+.pnp
+.pnp.js
+
+# ── Builds ──
+dist/
+build/
+*.tsbuildinfo
+
+# ── Secretos / entorno (NUNCA subir) ──
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ── Base de datos local ──
+data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# ── Logs ──
+logs/
+*.log
+npm-debug.log*
+bun-debug.log*
+
+# ── Runtime / PM2 ──
+.pm2/
+
+# ── OS / editor ──
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
