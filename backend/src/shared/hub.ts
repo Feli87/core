@@ -14,9 +14,17 @@ export interface RealtimeEvent {
     | "config.created"
     | "config.updated"
     | "config.deleted"
-    | "config.restored";
-  configId: number;
-  // payload libre (la config actualizada, o { id } en delete)
+    | "config.restored"
+    | "post.created"
+    | "post.updated"
+    | "post.published"
+    | "post.unpublished"
+    | "post.deleted";
+  // configId para eventos de remote-config; postId/blogId para eventos de blog.
+  configId?: number;
+  postId?: number;
+  blogId?: number;
+  // payload libre (la config/post actualizado, o { id } en delete)
   data: unknown;
   version?: number;
   at: number;

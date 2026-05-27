@@ -4,3 +4,4 @@
  */
 export * from "../modules/auth/auth.schema";
 export * from "../modules/remote-config/remoteConfig.schema";
+export * from "../modules/blog/blog.schema";

@@ -22,12 +22,27 @@ export const authService = {
 
   async createUser(username: string, plain: string, role = "operator") {
     const passHash = await this.hash(plain);
-    authRepository.insert({
+    return authRepository.insert({
       username,
       passHash,
       role,
       createdAt: Math.floor(Date.now() / 1000),
     });
+  },
+
+  /**
+   * Registro público: crea el usuario y devuelve su fila pública.
+   * La provisión del blog se orquesta en el controller (para mantener el
+   * service de auth desacoplado del módulo blog).
+   */
+  async register(username: string, plain: string): Promise<PublicUser | null> {
+    if (this.userExists(username)) return null;
+    const passHash = await this.hash(plain);
+    const now = Math.floor(Date.now() / 1000);
+    authRepository.insert({ username, passHash, role: "author", createdAt: now });
+    const row = authRepository.findByUsername(username);
+    if (!row) return null;
+    return { id: row.id, username: row.username, role: row.role };
   },
 
   userExists(username: string): boolean {

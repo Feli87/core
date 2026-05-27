@@ -2,13 +2,41 @@ import { useEffect, useState } from "react";
 import { api } from "./eden";
 import { Login } from "./components/Login";
 import { Dashboard } from "./components/Dashboard";
+import { TenantBlog } from "./components/TenantBlog";
 
 export interface SessionUser {
   username: string;
   role: string;
 }
 
+/**
+ * Resuelve el slug del tenant desde el hostname.
+ * - core.azonline.com.ar / www / apex / localhost → null (app de gestión)
+ * - <slug>.azonline.com.ar → slug (blog público del tenant)
+ */
+function resolveTenantSlug(): string | null {
+  const host = window.location.hostname;
+  // dev local
+  if (host === "localhost" || host === "127.0.0.1" || /^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+    // permite ?tenant=slug para probar en dev
+    const t = new URLSearchParams(window.location.search).get("tenant");
+    return t || null;
+  }
+  const base = ".azonline.com.ar";
+  if (!host.endsWith(base)) return null;
+  const sub = host.slice(0, -base.length); // lo de antes de .azonline.com.ar
+  const reserved = new Set(["core", "core-ingress", "www", "", "mail", "webmail"]);
+  if (reserved.has(sub) || sub.includes(".")) return null;
+  return sub;
+}
+
 export function App() {
+  const tenantSlug = resolveTenantSlug();
+  if (tenantSlug) return <TenantBlog slug={tenantSlug} />;
+  return <CoreApp />;
+}
+
+function CoreApp() {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [loading, setLoading] = useState(true);
 

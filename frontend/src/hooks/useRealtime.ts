@@ -6,8 +6,22 @@
 import { useEffect, useRef, useState } from "react";
 
 export interface RealtimeEvent {
-  type: "ready" | "config.created" | "config.updated" | "config.deleted" | "config.restored" | "pong" | "error";
+  type:
+    | "ready"
+    | "config.created"
+    | "config.updated"
+    | "config.deleted"
+    | "config.restored"
+    | "post.created"
+    | "post.updated"
+    | "post.published"
+    | "post.unpublished"
+    | "post.deleted"
+    | "pong"
+    | "error";
   configId?: number;
+  postId?: number;
+  blogId?: number;
   data?: unknown;
   version?: number;
   at?: number;
@@ -15,7 +29,12 @@ export interface RealtimeEvent {
 
 type Status = "connecting" | "online" | "offline";
 
-export function useRealtime(onEvent: (e: RealtimeEvent) => void) {
+/**
+ * @param onEvent  callback de eventos del servidor
+ * @param path     ruta WS (default /api/realtime, autenticada). Para el blog
+ *                 público pasar `/api/public/realtime?slug=<slug>`.
+ */
+export function useRealtime(onEvent: (e: RealtimeEvent) => void, path = "/api/realtime") {
   const [status, setStatus] = useState<Status>("connecting");
   const onEventRef = useRef(onEvent);
   onEventRef.current = onEvent;
@@ -29,7 +48,7 @@ export function useRealtime(onEvent: (e: RealtimeEvent) => void) {
     function connect() {
       if (closed) return;
       const proto = window.location.protocol === "https:" ? "wss" : "ws";
-      ws = new WebSocket(`${proto}://${window.location.host}/api/realtime`);
+      ws = new WebSocket(`${proto}://${window.location.host}${path}`);
       setStatus("connecting");
 
       ws.onopen = () => {
@@ -64,7 +83,7 @@ export function useRealtime(onEvent: (e: RealtimeEvent) => void) {
       if (pingTimer) clearInterval(pingTimer);
       ws?.close();
     };
-  }, []);
+  }, [path]);
 
   return { status };
 }

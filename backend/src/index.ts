@@ -12,6 +12,7 @@ import { securityHeaders } from "./shared/security";
 import { authPlugin } from "./shared/auth.plugin";
 import { authController } from "./modules/auth";
 import { remoteConfigController, realtimeController } from "./modules/remote-config";
+import { blogController, publicBlogController, publicRealtimeController } from "./modules/blog";
 
 const app = new Elysia({ prefix: "/api" })
   .use(securityHeaders)
@@ -27,6 +28,8 @@ const app = new Elysia({ prefix: "/api" })
         tags: [
           { name: "auth", description: "Autenticación y sesión" },
           { name: "remote-config", description: "Configuraciones remotas por usuario" },
+          { name: "blog", description: "Blog del usuario (multi-tenant) y posts" },
+          { name: "public", description: "Lectura pública del blog del tenant" },
           { name: "secure", description: "Recursos protegidos" },
         ],
       },
@@ -42,6 +45,9 @@ const app = new Elysia({ prefix: "/api" })
   .use(authController)
   .use(remoteConfigController)
   .use(realtimeController)
+  .use(blogController)
+  .use(publicBlogController)
+  .use(publicRealtimeController)
 
   // ---- Recurso protegido de ejemplo ----
   .use(authPlugin)

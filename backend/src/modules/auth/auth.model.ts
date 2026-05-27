@@ -9,6 +9,12 @@ export const loginBody = t.Object({
   password: t.String({ minLength: 8, maxLength: 200 }),
 });
 
+// signup: el username será el subdominio público → estrictamente url-safe.
+export const signupBody = t.Object({
+  username: t.String({ pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$", minLength: 3, maxLength: 40 }),
+  password: t.String({ minLength: 8, maxLength: 200 }),
+});
+
 export const publicUser = t.Object({
   id: t.Number(),
   username: t.String(),
