@@ -11,7 +11,7 @@ import { config } from "./config";
 import { securityHeaders } from "./shared/security";
 import { authPlugin } from "./shared/auth.plugin";
 import { authController } from "./modules/auth";
-import { remoteConfigController } from "./modules/remote-config";
+import { remoteConfigController, realtimeController } from "./modules/remote-config";
 
 const app = new Elysia({ prefix: "/api" })
   .use(securityHeaders)
@@ -41,6 +41,7 @@ const app = new Elysia({ prefix: "/api" })
   // ---- Módulos ----
   .use(authController)
   .use(remoteConfigController)
+  .use(realtimeController)
 
   // ---- Recurso protegido de ejemplo ----
   .use(authPlugin)

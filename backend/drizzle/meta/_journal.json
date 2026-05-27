@@ -15,6 +15,13 @@
       "when": 1779863281153,
       "tag": "0001_silky_garia",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1779863880895,
+      "tag": "0002_flippant_the_initiative",
+      "breakpoints": true
     }
   ]
 }

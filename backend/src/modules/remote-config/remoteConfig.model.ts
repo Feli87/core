@@ -1,8 +1,5 @@
 /**
  * DTOs del módulo remote-config.
- * - createBody: campos al crear (name obligatorio, resto opcional)
- * - updateBody: todos opcionales (PATCH parcial)
- * - colores validados con patrón hex (#rgb / #rrggbb)
  */
 import { t } from "elysia";
 
@@ -19,9 +16,22 @@ export const createBody = t.Object({
   textColor: t.Optional(hex),
 });
 
-export const updateBody = t.Partial(createBody);
+// update permite los mismos campos (parciales) + una nota de cambio opcional
+export const updateBody = t.Partial(
+  t.Object({
+    name: t.String({ minLength: 1, maxLength: 120 }),
+    title: t.String({ maxLength: 200 }),
+    description: t.String({ maxLength: 2000 }),
+    url,
+    image: url,
+    bgColor: hex,
+    textColor: hex,
+    changeNote: t.String({ maxLength: 200 }),
+  })
+);
 
 export const idParam = t.Object({ id: t.Number() });
+export const versionParams = t.Object({ id: t.Number(), version: t.Number() });
 
 export type CreateBody = typeof createBody.static;
-export type UpdateBody = typeof updateBody.static;
+export type UpdateBody = Omit<typeof updateBody.static, "changeNote">;

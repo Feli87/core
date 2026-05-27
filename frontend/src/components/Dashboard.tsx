@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../eden";
 import type { SessionUser } from "../App";
+import { RemoteConfigManager } from "./RemoteConfigManager";
 
 interface DashData {
   message: string;
@@ -77,6 +78,8 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
             </p>
           )}
         </div>
+
+        <RemoteConfigManager />
       </main>
     </div>
   );
