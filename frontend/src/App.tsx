@@ -25,7 +25,13 @@ function resolveTenantSlug(): string | null {
   const base = ".azonline.com.ar";
   if (!host.endsWith(base)) return null;
   const sub = host.slice(0, -base.length); // lo de antes de .azonline.com.ar
-  const reserved = new Set(["core", "core-ingress", "www", "", "mail", "webmail"]);
+  // Subdominios reales del dominio (no son blogs de tenant). Mantener en sync
+  // con la zona DNS para que core nunca los interprete como blog.
+  const reserved = new Set([
+    "core", "core-ingress", "www", "", "mail", "webmail", "vault",
+    "back", "dev", "dev-backend", "mcp", "opendata", "rss", "mapa",
+    "umd-map", "umd-map-dev", "landing-demo",
+  ]);
   if (reserved.has(sub) || sub.includes(".")) return null;
   return sub;
 }
